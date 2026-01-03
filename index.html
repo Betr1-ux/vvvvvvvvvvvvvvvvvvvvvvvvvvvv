@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Coins Recharge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:#fdfdfd;
+    color:#161823;
+}
+.header{
+    background:#fff;
+    padding:15px;
+    text-align:center;
+    font-weight:bold;
+    border-bottom:1px solid #eee;
+    font-size:18px;
+}
+.container{
+    max-width:450px;
+    margin:auto;
+    padding:15px;
+}
+.user-card{
+    background:#fff;
+    padding:18px;
+    border-radius:12px;
+    margin-bottom:20px;
+    border:1px solid #eee;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    position:relative;
+}
+.badge{
+    position:absolute;
+    top:-10px;
+    right:15px;
+    background:#fe2c55;
+    color:#fff;
+    padding:4px 10px;
+    font-size:12px;
+    font-weight:bold;
+    border-radius:20px;
+}
+.balance-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:24px;
+    font-weight:700;
+    margin:12px 0 8px;
+}
+.coin-circle img{
+    width:24px;
+    height:24px;
+}
+.username-field{
+    width:100%;
+    padding:12px;
+    border:2px solid #fe2c55;
+    border-radius:8px;
+    background:#f8f8f8;
+    outline:none;
+    transition: border-color 0.3s;
+}
+.username-field:focus{
+    background:#fff;
+}
+.tip-text{
+    margin-top:8px;
+    font-size:13px;
+    color:#fe2c55;
+    font-weight:600;
+}
+.coins-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+.coin-box{
+    background:#fff;
+    border:1.5px solid #eee;
+    border-radius:10px;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    transition:.2s;
+}
+.coin-box.active{
+    border-color:#fe2c55;
+    background:#fff4f5;
+}
+.coin-val{
+    font-weight:bold;
+    font-size:18px;
+}
+.small-coin img{
+    width:24px;
+    height:24px;
+}
+.btn{
+    width:100%;
+    margin-top:25px;
+    padding:16px;
+    background:#fe2c55;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+#overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#fff;
+    z-index:1000;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+.loader{
+    width:48px;
+    height:48px;
+    border:5px solid #f3f3f3;
+    border-top:5px solid #fe2c55;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.success-icon{
+    font-size:80px;
+    color:#4bb543;
+    display:none;
+}
+.success-text{
+    font-size:24px;
+    font-weight:bold;
+    display:none;
+}
+.custom-screen{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#fff;
+    z-index:999;
+}
+.custom-box{padding:20px}
+.custom-title{text-align:center;font-size:18px;font-weight:bold;margin-bottom:15px}
+.custom-input{
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:15px;
+    font-size:32px;
+    font-weight:800;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+.keypad{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:20px;
+}
+.keypad button{
+    padding:20px;
+    font-size:20px;
+    border:none;
+    background:#f2f2f2;
+    border-radius:8px;
+}
+.confirm-btn{
+    width:100%;
+    margin-top:20px;
+    padding:15px;
+    background:#fe2c55;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    font-size:17px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Coins</div>
+
+<div class="container">
+    <div class="user-card">
+        <div class="badge">COINS</div>
+
+        <div style="color:#8a8b91;font-size:14px;">الرصيد الحالي</div>
+        <div class="balance-row">
+            <div class="coin-circle"><img src="coin.png" alt="Coin"></div>
+            <span id="balance">4,000,000</span>
+        </div>
+
+        <input id="username" class="username-field" placeholder="Username">
+        <div class="tip-text">
+            Save approximately 25% with lower third-party service fees.
+        </div>
+    </div>
+
+    <div class="coins-grid">
+        <div class="coin-box" onclick="select(this,30)">
+            <div class="small-coin"><img src="coin.png" alt="Coin"></div>
+            <div class="coin-val">30</div>
+        </div>
+        <div class="coin-box" onclick="select(this,350)">
+            <div class="small-coin"><img src="coin.png" alt="Coin"></div>
+            <div class="coin-val">350</div>
+        </div>
+        <div class="coin-box" onclick="select(this,700)">
+            <div class="small-coin"><img src="coin.png" alt="Coin"></div>
+            <div class="coin-val">700</div>
+        </div>
+        <div class="coin-box" onclick="select(this,1400)">
+            <div class="small-coin"><img src="coin.png" alt="Coin"></div>
+            <div class="coin-val">1,400</div>
+        </div>
+        <div class="coin-box" onclick="select(this,3500)">
+            <div class="small-coin"><img src="coin.png" alt="Coin"></div>
+            <div class="coin-val">3,500</div>
+        </div>
+        <div class="coin-box" onclick="openCustom()">
+            <div class="small-coin"><img src="coin.png" alt="Coin"></div>
+            <div class="coin-val">مخصص</div>
+        </div>
+    </div>
+
+    <button class="btn" onclick="processRecharge()">Continue</button>
+</div>
+
+<!-- Confirm Screen -->
+<div class="custom-screen" id="confirmScreen">
+    <div class="custom-box">
+        <div class="custom-title">Confirm Recharge</div>
+
+        <p><b>Username:</b> <span id="cUser"></span></p>
+        <p><b>Coins:</b> <span id="cCoins"></span></p>
+        <p><b>Current Balance:</b> <span id="cBefore"></span></p>
+        <p><b>Deduction:</b> <span id="cDeduct"></span></p>
+        <p><b>Balance After:</b> <span id="cAfter"></span></p>
+
+        <button class="confirm-btn" onclick="confirmRecharge()">Confirm</button>
+    </div>
+</div>
+
+<div id="overlay">
+    <div id="loader" class="loader"></div>
+    <div id="successIcon" class="success-icon">✔</div>
+    <div id="successText" class="success-text">Successful</div>
+</div>
+
+<div class="custom-screen" id="customScreen">
+    <div class="custom-box">
+        <div class="custom-title">إدخال مبلغ مخصص</div>
+        <div class="custom-input">
+            <span id="customValue">0</span>
+            <div class="small-coin"><img src="coin.png" alt="Coin"></div>
+        </div>
+        <div class="keypad">
+            <button onclick="press('1')">1</button>
+            <button onclick="press('2')">2</button>
+            <button onclick="press('3')">3</button>
+            <button onclick="del()">⌫</button>
+            <button onclick="press('4')">4</button>
+            <button onclick="press('5')">5</button>
+            <button onclick="press('6')">6</button>
+            <button onclick="press('000')">000</button>
+            <button onclick="press('7')">7</button>
+            <button onclick="press('8')">8</button>
+            <button onclick="press('9')">9</button>
+            <button onclick="press('0')">0</button>
+        </div>
+        <button class="confirm-btn" onclick="confirmCustom()">send </button>
+    </div>
+</div>
+
+<script>
+let selectedVal=0;
+let customValStr="0";
+let currentBalance=4000000;
+
+function select(el,val){
+    document.querySelectorAll('.coin-box').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    selectedVal=val;
+}
+function openCustom(){
+    document.getElementById("customScreen").style.display="block";
+}
+function press(n){
+    if(customValStr==="0") customValStr="";
+    if(customValStr.length<9) customValStr+=n;
+    document.getElementById("customValue").innerText=Number(customValStr).toLocaleString();
+}
+function del(){
+    customValStr=customValStr.slice(0,-1)||"0";
+    document.getElementById("customValue").innerText=Number(customValStr).toLocaleString();
+}
+function confirmCustom(){
+    selectedVal=parseInt(customValStr);
+    document.getElementById("customScreen").style.display="none";
+    document.querySelector('.coin-box:last-child .coin-val').innerText=selectedVal.toLocaleString();
+    document.querySelectorAll('.coin-box').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.coin-box:last-child').classList.add('active');
+}
+
+const usernameField = document.getElementById("username");
+usernameField.addEventListener("input", function() {
+    if(this.value.trim().length > 0){
+        this.style.borderColor = "#4bb543";
+    } else {
+        this.style.borderColor = "#fe2c55";
+    }
+});
+
+function processRecharge(){
+    const user=document.getElementById("username").value;
+    if(!user||selectedVal<=0){
+        alert("يرجى إدخال اسم المستخدم واختيار عدد العملات");
+        return;
+    }
+
+    cUser.innerText = user;
+    cCoins.innerText = selectedVal.toLocaleString();
+    cBefore.innerText = currentBalance.toLocaleString();
+    cDeduct.innerText = selectedVal.toLocaleString();
+    cAfter.innerText = (currentBalance - selectedVal).toLocaleString();
+
+    document.getElementById("confirmScreen").style.display="block";
+}
+
+function confirmRecharge(){
+    document.getElementById("confirmScreen").style.display="none";
+
+    overlay.style.display="flex";
+    loader.style.display="block";
+    successIcon.style.display="none";
+    successText.style.display="none";
+
+    setTimeout(()=>{
+        loader.style.display="none";
+        successIcon.style.display="block";
+        successText.style.display="block";
+
+        currentBalance -= selectedVal;
+        balance.innerText = currentBalance.toLocaleString();
+
+        document.getElementById("username").value = "";
+        usernameField.style.borderColor = "#fe2c55";
+        selectedVal = 0;
+
+        setTimeout(()=>overlay.style.display="none",3000);
+    },2500);
+}
+</script>
+
+</body>
+                                       </html>
